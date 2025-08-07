@@ -1,75 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Greeting from the ☁️ Cloud!</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple E-Commerce</title>
   <style>
-    body {
-      background: linear-gradient(to right, #74ebd5, #acb6e5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-    }
-
-    .card {
-      background: white;
-      padding: 2em;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      text-align: center;
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    button {
-      background-color: #007BFF;
-      border: none;
-      padding: 0.8em 1.5em;
-      color: white;
-      font-size: 1em;
-      border-radius: 8px;
-      margin-top: 1em;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    #surprise {
-      margin-top: 1.5em;
-      font-size: 1.2em;
-      color: green;
-      font-weight: bold;
-      display: none;
-    }
-
-    .hidden {
-      display: none;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f2f2f2; }
+    header, footer { background: #0077cc; color: white; padding: 1em; text-align: center; }
+    .container { padding: 1em; }
+    .products { display: flex; flex-wrap: wrap; gap: 1em; justify-content: center; }
+    .product { background: white; padding: 1em; border-radius: 8px; width: 200px; box-shadow: 0 0 5px rgba(0,0,0,0.1); text-align: center; }
+    .product img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; }
+    .product button { background: #0077cc; color: white; border: none; padding: 0.5em 1em; border-radius: 4px; margin-top: 0.5em; cursor: pointer; }
+    .product button:hover { background: #005fa3; }
+    .cart { margin-top: 2em; background: white; padding: 1em; border-radius: 8px; max-width: 600px; margin: 2em auto; }
+    .cart ul { list-style: none; padding: 0; }
+    .cart li { display: flex; justify-content: space-between; padding: 0.5em 0; border-bottom: 1px solid #ddd; }
+    .remove-btn { color: red; cursor: pointer; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Hello from the ☁️ Cloud!</h1>
-    <p id="message">Click the button to get a surprise!</p>
-    <button onclick="showSurprise()">🎁 Reveal</button>
-    <div id="surprise" class="hidden">🚀 You’ve successfully deployed to AWS!</div>
+
+  <header>
+    <h1>🛍️ E-Kart - Simple E-Commerce</h1>
+    <p>Cart Items: <span id="cart-count">0</span></p>
+  </header>
+
+  <div class="container">
+    <div class="products" id="product-list">
+      <!-- Products will be inserted here -->
+    </div>
+
+    <div class="cart">
+      <h2>🛒 Your Cart</h2>
+      <ul id="cart-items"></ul>
+    </div>
   </div>
 
+  <footer>
+    &copy; 2025 E-Kart | Hare Krishna 🙏
+  </footer>
+
   <script>
-    function showSurprise() {
-      document.getElementById('surprise').style.display = 'block';
-      document.getElementById('message').innerText = '🎉 Surprise revealed!';
+    const products = [
+      { id: 1, name: "Krishna T-shirt", price: 499, image: "https://via.placeholder.com/200" },
+      { id: 2, name: "Bhagavad Gita", price: 299, image: "https://via.placeholder.com/200" },
+      { id: 3, name: "Tulsi Mala", price: 199, image: "https://via.placeholder.com/200" }
+    ];
+
+    const productList = document.getElementById('product-list');
+    const cartItems = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    let cart = [];
+
+    function renderProducts() {
+      products.forEach(product => {
+        const div = document.createElement('div');
+        div.className = 'product';
+        div.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>₹${product.price}</p>
+          <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+        productList.appendChild(div);
+      });
     }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      updateCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function updateCart() {
+      cartItems.innerHTML = '';
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${item.name} - ₹${item.price} <span class="remove-btn" onclick="removeFromCart(${index})">Remove</span>
+        `;
+        cartItems.appendChild(li);
+      });
+      cartCount.innerText = cart.length;
+    }
+
+    renderProducts();
   </script>
+
 </body>
 </html>
